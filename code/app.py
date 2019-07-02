@@ -31,8 +31,9 @@ class Item(Resource):
         for item in items:
             if item["name"] == name :
                 item["price"] = request_data["price"]
-                return({"message":"The item '{}' was updated." .format(request_data["name"])})
-        return({"message":"item was not found"})
+                return({"message":"The item '{}' was updated." .format(name)})
+        items.append({"name":name, "price":request_data["price"]})
+        return({"message": "The item '{}' was added." .format(name)})
 
 class Items(Resource):
     def get(self):
