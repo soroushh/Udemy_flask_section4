@@ -26,6 +26,13 @@ class Item(Resource):
                 items.remove(item)
                 return({"message": "the item '{}' was deleted" .format(name)})
         return({"message":"Item does not exist."})
+    def put(self, name):
+        request_data = request.get_json()
+        for item in items:
+            if item["name"] == name :
+                item["price"] = request_data["price"]
+                return({"message":"The item '{}' was updated." .format(request_data["name"])})
+        return({"message":"item was not found"})
 
 class Items(Resource):
     def get(self):
