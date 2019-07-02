@@ -7,19 +7,15 @@ items = []
 
 class Item(Resource):
     def get(self,name):
-        # for item in items:
-        #     if item["name"]== name :
-        #         return(jsonify(item))
-        # return(list(filter(lambda item: item["name"]== name , items)))
-        chosen_items = [item for item in items if item["name"] == name]
-        if chosen_items == []:
-            return({"message":"item not found"}), 404
-        else:
-            return chosen_items[0], 200
+        item = next(filter(lambda item: item["name"]== name , items), None)
+        return {"item":item} ,200 if item else 404
 
     def post(self, name):
-        items.append({"name":name , "price":12})
-        return {"name":name , "price" :12}, 201
+        if next(filter(lambda item: item["name"]== name , items), None):
+            return {"message":"Item exists already"}, 400
+        request_data = request.get_json()
+        items.append({"name":name , "price":request_data["price"]})
+        return {"name":name , "price" :request_data["price"]}, 201
 
 class Items(Resource):
     def get(self):
