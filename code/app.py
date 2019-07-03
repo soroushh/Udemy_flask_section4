@@ -31,12 +31,19 @@ class Item(Resource):
         return({"message": "The '{}' item was deleted." .format(name)})
     def put(self, name):
         request_data = request.get_json()
-        for item in items:
-            if item["name"] == name :
-                item["price"] = request_data["price"]
-                return({"message":"The item '{}' was updated." .format(name)})
-        items.append({"name":name, "price":request_data["price"]})
-        return({"message": "The item '{}' was added." .format(name)})
+        # for item in items:
+        #     if item["name"] == name :
+        #         item["price"] = request_data["price"]
+        #         return({"message":"The item '{}' was updated." .format(name)})
+        # items.append({"name":name, "price":request_data["price"]})
+        # return({"message": "The item '{}' was added." .format(name)})
+        item = next(filter(lambda item: item["name"] == name , items), None)
+        if item is None:
+            item = {"name": name , "price": request_data["price"]}
+            items.append(item)
+        else :
+            item.update(request_data)
+        return item
 
 class Items(Resource):
     def get(self):
