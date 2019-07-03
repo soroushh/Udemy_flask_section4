@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 from flask_jwt import JWT, jwt_required
 from security import authenticate, identity
 app = Flask(__name__)
@@ -30,7 +30,12 @@ class Item(Resource):
         items = list(filter(lambda item: item["name"] != name , items))
         return({"message": "The '{}' item was deleted." .format(name)})
     def put(self, name):
-        request_data = request.get_json()
+        parser = reqparse.RequestParser()
+        parser.add_argument('price',
+        type = float,
+        required=True,
+        help="This field can not be left blank.")
+        request_data = parser.parse_args()
         # for item in items:
         #     if item["name"] == name :
         #         item["price"] = request_data["price"]
