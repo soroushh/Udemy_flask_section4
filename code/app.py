@@ -21,11 +21,14 @@ class Item(Resource):
         items.append({"name":name , "price":request_data["price"]})
         return {"name":name , "price" :request_data["price"]}, 201
     def delete(self,name):
-        for item in items:
-            if item["name"] == name :
-                items.remove(item)
-                return({"message": "the item '{}' was deleted" .format(name)})
-        return({"message":"Item does not exist."})
+        # for item in items:
+        #     if item["name"] == name :
+        #         items.remove(item)
+        #         return({"message": "the item '{}' was deleted" .format(name)})
+        # return({"message":"Item does not exist."})
+        global items
+        items = list(filter(lambda item: item["name"] != name , items))
+        return({"message": "The '{}' item was deleted." .format(name)})
     def put(self, name):
         request_data = request.get_json()
         for item in items:
