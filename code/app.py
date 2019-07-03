@@ -15,17 +15,25 @@ class Item(Resource):
         return {"item":item} ,200 if item else 404
 
     def post(self, name):
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+        "price",
+        type=float ,
+        required = True,
+        help="The price should be float and it is required to have it in your request."
+        )
+        parser.add_argument(
+        "end",
+        type=float ,
+        required = True,
+        help="The price should be float and it is required to have it in your request."
+        )
+        request_data = parser.parse_args()
         if next(filter(lambda item: item["name"]== name , items), None):
             return {"message":"Item exists already"}, 400
-        request_data = request.get_json()
         items.append({"name":name , "price":request_data["price"]})
         return {"name":name , "price" :request_data["price"]}, 201
     def delete(self,name):
-        # for item in items:
-        #     if item["name"] == name :
-        #         items.remove(item)
-        #         return({"message": "the item '{}' was deleted" .format(name)})
-        # return({"message":"Item does not exist."})
         global items
         items = list(filter(lambda item: item["name"] != name , items))
         return({"message": "The '{}' item was deleted." .format(name)})
@@ -34,14 +42,8 @@ class Item(Resource):
         parser.add_argument('price',
         type = float,
         required=True,
-        help="This field can not be left blank.")
+        help="This field can not be left blank. In addition it should be float type.")
         request_data = parser.parse_args()
-        # for item in items:
-        #     if item["name"] == name :
-        #         item["price"] = request_data["price"]
-        #         return({"message":"The item '{}' was updated." .format(name)})
-        # items.append({"name":name, "price":request_data["price"]})
-        # return({"message": "The item '{}' was added." .format(name)})
         item = next(filter(lambda item: item["name"] == name , items), None)
         if item is None:
             item = {"name": name , "price": request_data["price"]}
